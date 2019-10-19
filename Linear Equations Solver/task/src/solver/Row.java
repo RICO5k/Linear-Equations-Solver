@@ -19,6 +19,10 @@ public class Row {
         return row.length;
     }
 
+    public void setValue(int i, double value) {
+        row[i] = value;
+    }
+
     public static Row multiplyRowBy(Row row, double multiplier) {
         double[] newRow = new  double[row.getLength()];
 

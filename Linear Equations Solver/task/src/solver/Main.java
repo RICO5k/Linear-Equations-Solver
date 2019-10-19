@@ -1,6 +1,7 @@
 package solver;
 
 import java.io.PrintWriter;
+import java.util.ArrayList;
 
 public class Main {
 
@@ -17,18 +18,24 @@ public class Main {
         Matrix matrix = new Matrix(fileIn);
         LinearEquation lEquation = new LinearEquation(matrix);
 
-        double[] unknowns = lEquation.solve();
+        ArrayList<Double> unknowns = lEquation.solve();
 
-        printSolution(unknowns);
-        writeSolutionToFile(fileOut, unknowns);
+        if(unknowns == null) {
+            String message = lEquation.specialCase();
+            System.out.println(message);
+            writeSolutionToFile(fileOut, message);
+        } else {
+            printSolution(unknowns);
+            writeSolutionToFile(fileOut, unknowns);
+        }
     }
 
-    public static void printSolution(double[] solution) {
+    public static void printSolution(ArrayList<Double> solution) {
         System.out.print("The solution is: (");
 
-        for(int i=0; i<solution.length; i++) {
-            System.out.print(solution[i]);
-            if(i == solution.length-1) {
+        for(int i=0; i<solution.size(); i++) {
+            System.out.print(solution.get(i));
+            if(i == solution.size()-1) {
                 System.out.println(")");
             } else {
                 System.out.print(", ");
@@ -36,11 +43,21 @@ public class Main {
         }
     }
 
-    public static void writeSolutionToFile(String fileName, double[] solution) {
+    public static void writeSolutionToFile(String fileName, ArrayList<Double> solution) {
         try(PrintWriter writer = new PrintWriter(fileName)) {
             for (double num: solution) {
                 writer.println(num);
             }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Saved to " + fileName);
+    }
+
+    public static void writeSolutionToFile(String fileName, String toWrite) {
+        try(PrintWriter writer = new PrintWriter(fileName)) {
+            writer.println(toWrite);
         } catch(Exception e) {
             e.printStackTrace();
         }
